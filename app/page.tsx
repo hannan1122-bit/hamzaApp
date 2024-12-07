@@ -19,7 +19,10 @@ export default function MainPage() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActivePage(entry.target.getAttribute("data-page"));
+            const page = entry.target.getAttribute("data-page");
+            if (page) {
+              setActivePage(page); // Ensure `page` is not null before setting it
+            }
           }
         });
       },
