@@ -13,8 +13,8 @@ const FeaturedProducts = () => (
               className="w-full h-40 md:h-48 lg:h-56 object-cover mb-4 rounded"
             />
             <h3 className="font-semibold text-lg">Product {index + 1}</h3>
-            <p className="text-gray-600 text-sm md:text-base">$99.99</p>
-            <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all duration-300">
+            <p className="text-yellow-800 text-sm md:text-base">$99.99</p>
+            <button className="mt-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-200 transition-all duration-300">
               View
             </button>
           </div>

@@ -1,133 +1,102 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from "react";
 
-export default function Navbar({ setPage }) {
+export default function Navbar({ setPage, activePage }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [scrollingDown, setScrollingDown] = useState(false);
 
-  const navigate = (page) => {
-    setIsOpen(false); // Close mobile menu
-    setPage(page); // Set the active page
+  const handleScroll = (page) => {
+    setPage(page);
+
+    const section = document.querySelector(`[data-page="${page}"]`);
+    if (section) {
+      window.scrollTo({
+        top: section.offsetTop - 76, // Offset for Header + Navbar
+        behavior: "smooth",
+      });
+    }
   };
 
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleNavbarScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollingDown(currentScrollY > lastScrollY);
+      setShowNavbar(!(scrollingDown && currentScrollY > 50));
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleNavbarScroll);
+    return () => window.removeEventListener("scroll", handleNavbarScroll);
+  }, [scrollingDown]);
+
   return (
-    <nav className="bg-gray-700 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
-            rel="stylesheet"
-          />
-
-          <div className="flex-shrink-0">
-            <button
-              onClick={() => navigate("Home")}
-              className="text-2xl font-bold"
-              style={{
-                fontFamily: "'Poppins', sans-serif", // Apply the font here
-              }}
-            >
-              Hills Cargo
-            </button>
-          </div>
-
-          {/* Menu (Center Links) */}
-          <div className="hidden md:flex space-x-8">
-            <button onClick={() => navigate("Home")} className="hover:text-gray-400 transition duration-300">
-              Home
-            </button>
-            <button onClick={() => navigate("About")} className="hover:text-gray-400 transition duration-300">
-              About
-            </button>
-            <button onClick={() => navigate("Products")} className="hover:text-gray-400 transition duration-300">
-              Products
-            </button>
-            <button onClick={() => navigate("Contact")} className="hover:text-gray-400 transition duration-300">
-              Contact
-            </button>
-          </div>
-
-          {/* Search Icon */}
-          <div className="flex items-center space-x-4">
-            <button
-              aria-label="Search"
-              className="text-gray-400 hover:text-white focus:outline-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6"
+    <nav
+      className={`fixed top-[40px] left-0 w-full z-20 transition-all duration-300 ${
+        showNavbar ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
+      <div className="bg-yellow-600 text-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo or Title */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => handleScroll("Home")}
+                className={`text-2xl font-semibold tracking-tight ${
+                  activePage === "Home" ? "underline" : ""
+                }`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M11 4a7 7 0 110 14 7 7 0 010-14zm0 0l7 7"
-                />
-              </svg>
-            </button>
-          </div>
+                Hills Cargo
+              </button>
+            </div>
 
-          {/* Mobile Menu Button */}
+            {/* Desktop Menu */}
+            <div className="hidden md:flex space-x-6 items-center">
+              {["Home", "About", "Products", "Contact"].map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handleScroll(page)}
+                  className={`hover:text-gray-300 text-lg font-medium ${
+                    activePage === page ? "text-yellow-300" : ""
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button onClick={() => setIsOpen(!isOpen)} className="text-white">
+                ☰
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
           <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-              aria-label="Open menu"
-            >
-              <svg
-                className="h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              </svg>
-            </button>
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {["Home", "About", "Products", "Contact"].map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handleScroll(page)}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    activePage === page ? "bg-yellow-700" : ""
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <button
-              onClick={() => navigate("Home")}
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => navigate("About")}
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
-            >
-              About
-            </button>
-            <button
-              onClick={() => navigate("Products")}
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
-            >
-              Products
-            </button>
-            <button
-              onClick={() => navigate("Contact")}
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
-            >
-              Contact
-            </button>
-          </div>
-        </div>
-      )}
     </nav>
   );
 }
