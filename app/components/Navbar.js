@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import { GiMountaintop } from "react-icons/gi"; // A more exciting mountain logo
 
 export default function Navbar({ setPage, activePage }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,6 +45,7 @@ export default function Navbar({ setPage, activePage }) {
           <div className="flex items-center justify-between h-16">
             {/* Logo or Title */}
             <div className="flex items-center space-x-2">
+              <GiMountaintop className="text-4xl text-black" /> {/* Changed to black */}
               <button
                 onClick={() => handleScroll("Home")}
                 className={`text-2xl font-semibold tracking-tight ${
