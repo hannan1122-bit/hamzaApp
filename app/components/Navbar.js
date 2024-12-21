@@ -1,24 +1,47 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
-import { GiMountaintop } from "react-icons/gi"; // A more exciting mountain logo
+import { GiMountaintop } from "react-icons/gi";
+import { FaShoppingCart } from "react-icons/fa";
+import { useCart } from "../contexts/CartContext";
+import { useRouter } from "next/navigation";
 
 export default function Navbar({ setPage, activePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [scrollingDown, setScrollingDown] = useState(false);
+  const { cart } = useCart();
+  const router = useRouter(); // Initialize router
+  const [isHomepage, setIsHomepage] = useState(router.pathname === "/"); // Track if on homepage
 
   const handleScroll = (page) => {
-    setPage(page);
+    if (!isHomepage) {
+      // Navigate to the homepage if not already on it
+      router.push("/");
+    }
 
+    // Close the mobile menu
+    setIsOpen(false);
+
+    // Scroll to the section
+    setTimeout(() => {
+      scrollToSection(page);
+    }, 100); // Delay ensures the page is fully loaded
+  };
+
+  const scrollToSection = (page) => {
     const section = document.querySelector(`[data-page="${page}"]`);
     if (section) {
       window.scrollTo({
-        top: section.offsetTop - 76, // Offset for Header + Navbar
+        top: section.offsetTop - 76, // Adjust to prevent hiding behind navbar
         behavior: "smooth",
       });
     }
   };
+
+  useEffect(() => {
+    setIsHomepage(router.pathname === "/"); // Check if the current page is the homepage
+  }, [router.pathname]); // Update whenever the route changes
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -43,20 +66,18 @@ export default function Navbar({ setPage, activePage }) {
       <div className="bg-yellow-600 text-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo or Title */}
             <div className="flex items-center space-x-2">
-              <GiMountaintop className="text-4xl text-black" /> {/* Changed to black */}
+              <GiMountaintop className="text-4xl text-black" />
               <button
                 onClick={() => handleScroll("Home")}
                 className={`text-2xl font-semibold tracking-tight ${
                   activePage === "Home" ? "underline" : ""
                 }`}
               >
-                Hills Cargo
+                Hills Packaging
               </button>
             </div>
 
-            {/* Desktop Menu */}
             <div className="hidden md:flex space-x-6 items-center">
               {["Home", "About", "Products", "Contact"].map((page) => (
                 <button
@@ -69,18 +90,40 @@ export default function Navbar({ setPage, activePage }) {
                   {page}
                 </button>
               ))}
+              <button
+                onClick={() => handleScroll("Cart")}
+                className="relative hover:text-gray-300 text-lg font-medium"
+              >
+                <FaShoppingCart className="text-2xl" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-red-500 text-white text-sm w-5 h-5 flex items-center justify-center rounded-full">
+                    {cart.length}
+                  </span>
+                )}
+              </button>
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center">
               <button onClick={() => setIsOpen(!isOpen)} className="text-white">
                 ☰
+              </button>
+
+              {/* Cart icon always visible on mobile */}
+              <button
+                onClick={() => handleScroll("Cart")}
+                className="relative ml-4 text-white"
+              >
+                <FaShoppingCart className="text-2xl" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-red-500 text-white text-sm w-5 h-5 flex items-center justify-center rounded-full">
+                    {cart.length}
+                  </span>
+                )}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
@@ -95,6 +138,17 @@ export default function Navbar({ setPage, activePage }) {
                   {page}
                 </button>
               ))}
+              <button
+                onClick={() => handleScroll("Cart")}
+                className="relative hover:text-gray-300 text-lg font-medium"
+              >
+                <FaShoppingCart className="text-2xl" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-red-500 text-white text-sm w-5 h-5 flex items-center justify-center rounded-full">
+                    {cart.length}
+                  </span>
+                )}
+              </button>
             </div>
           </div>
         )}
