@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import Header from "../app/components/Header";
@@ -44,8 +44,8 @@ export default function MainPage() {
     <CartProvider>
       <div>
         <Header />
-        <Navbar setPage={setActivePage} activePage={activePage} />
-        <main className="pt-[76px]">
+        <Navbar activePage={activePage} setPage={setActivePage} />
+        <main className="pt-[120px]"> {/* Add enough padding to push content below the navbar */}
           {/* Sections for scrolling */}
           <section data-page="Home">
             <Home />

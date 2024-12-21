@@ -54,7 +54,7 @@ export default function Navbar({ activePage }) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-20 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-30 transition-all duration-300 ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
