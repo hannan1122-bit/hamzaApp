@@ -6,42 +6,37 @@ import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../contexts/CartContext";
 import { useRouter } from "next/navigation";
 
-export default function Navbar({ setPage, activePage }) {
+export default function Navbar({ activePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [scrollingDown, setScrollingDown] = useState(false);
   const { cart } = useCart();
-  const router = useRouter(); // Initialize router
-  const [isHomepage, setIsHomepage] = useState(router.pathname === "/"); // Track if on homepage
+  const router = useRouter();
+  const [isHomepage, setIsHomepage] = useState(router.pathname === "/");
 
   const handleScroll = (page) => {
     if (!isHomepage) {
-      // Navigate to the homepage if not already on it
       router.push("/");
     }
-
-    // Close the mobile menu
     setIsOpen(false);
-
-    // Scroll to the section
     setTimeout(() => {
       scrollToSection(page);
-    }, 100); // Delay ensures the page is fully loaded
+    }, 100);
   };
 
   const scrollToSection = (page) => {
     const section = document.querySelector(`[data-page="${page}"]`);
     if (section) {
       window.scrollTo({
-        top: section.offsetTop - 76, // Adjust to prevent hiding behind navbar
+        top: section.offsetTop - 76,
         behavior: "smooth",
       });
     }
   };
 
   useEffect(() => {
-    setIsHomepage(router.pathname === "/"); // Check if the current page is the homepage
-  }, [router.pathname]); // Update whenever the route changes
+    setIsHomepage(router.pathname === "/");
+  }, [router.pathname]);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -59,7 +54,7 @@ export default function Navbar({ setPage, activePage }) {
 
   return (
     <nav
-      className={`fixed top-[40px] left-0 w-full z-20 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-20 transition-all duration-300 ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -108,7 +103,6 @@ export default function Navbar({ setPage, activePage }) {
                 ☰
               </button>
 
-              {/* Cart icon always visible on mobile */}
               <button
                 onClick={() => handleScroll("Cart")}
                 className="relative ml-4 text-white"
@@ -138,17 +132,6 @@ export default function Navbar({ setPage, activePage }) {
                   {page}
                 </button>
               ))}
-              <button
-                onClick={() => handleScroll("Cart")}
-                className="relative hover:text-gray-300 text-lg font-medium"
-              >
-                <FaShoppingCart className="text-2xl" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-2 -right-3 bg-red-500 text-white text-sm w-5 h-5 flex items-center justify-center rounded-full">
-                    {cart.length}
-                  </span>
-                )}
-              </button>
             </div>
           </div>
         )}
