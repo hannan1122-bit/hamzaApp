@@ -93,7 +93,7 @@ const TakeAwayBoxes = ({ addToCart }) => {
           </div>
         </section>
 
-        {/* Image Slider Section */}
+        {/* Image Slider Sectio*/}
         <section className="p-6">
           <div className="w-full flex justify-center">
             {/* Only the current image is shown */}
