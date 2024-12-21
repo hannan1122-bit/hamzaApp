@@ -86,7 +86,7 @@ const TakeAwayBoxes = ({ addToCart }) => {
                   onClick={() => addToCart(product)}
                   className="bg-yellow-500 text-white px-4 py-2 mt-2 rounded hover:bg-gray-600"
                 >
-                  Add to Cart
+                  Ad to Cart
                 </button>
               </div>
             ))}
