@@ -45,17 +45,17 @@ export default function MainPage() {
       <div>
         <Header />
         <Navbar activePage={activePage} setPage={setActivePage} />
-        <main className="pt-[120px]">
-          <section data-page="Home">
+        <main className="pt-[120px] bg-background text-foreground">
+          <section data-page="Home" className="min-h-screen">
             <Home />
           </section>
-          <section data-page="About">
+          <section data-page="About" className="min-h-screen">
             <About />
           </section>
-          <section data-page="Products">
+          <section data-page="Products" className="min-h-screen">
             <Products />
           </section>
-          <section data-page="Contact">
+          <section data-page="Contact" className="min-h-screen">
             <Contact />
           </section>
           <Footer />
