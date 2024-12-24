@@ -6,17 +6,17 @@ import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../contexts/CartContext";
 import { useRouter } from "next/navigation";
 
-
-export default function Navbar({ activePage }) {
+export default function Navbar({ activePage, setPage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [scrollingDown, setScrollingDown] = useState(false);
-  const [showCart, setShowCart] = useState(false); // State to toggle cart visibility
-  const { cart, removeFromCart, getTotalPrice } = useCart(); // Destructure removeFromCart and getTotalPrice
+  const [showCart, setShowCart] = useState(false);
+  const { cart, removeFromCart, getTotalPrice } = useCart();
   const router = useRouter();
   const [isHomepage, setIsHomepage] = useState(router.pathname === "/");
 
   const handleScroll = (page) => {
+    setPage(page);
     if (!isHomepage) {
       router.push("/");
     }
@@ -30,7 +30,7 @@ export default function Navbar({ activePage }) {
     const section = document.querySelector(`[data-page="${page}"]`);
     if (section) {
       window.scrollTo({
-        top: section.offsetTop - 76,
+        top: section.getBoundingClientRect().top + window.scrollY - 76,
         behavior: "smooth",
       });
     }
@@ -88,7 +88,7 @@ export default function Navbar({ activePage }) {
                 </button>
               ))}
               <button
-                onClick={() => setShowCart(true)} // Show the cart when clicked
+                onClick={() => setShowCart(true)}
                 className="relative hover:text-gray-300 text-lg font-medium"
               >
                 <FaShoppingCart className="text-2xl" />
@@ -106,7 +106,7 @@ export default function Navbar({ activePage }) {
               </button>
 
               <button
-                onClick={() => setShowCart(true)} // Show the cart when clicked
+                onClick={() => setShowCart(true)}
                 className="relative ml-4 text-white"
               >
                 <FaShoppingCart className="text-2xl" />
@@ -139,7 +139,6 @@ export default function Navbar({ activePage }) {
         )}
       </div>
 
-      {/* Show Cart Modal when showCart is true */}
       {showCart && (
         <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-40">
           <div className="bg-white p-6 max-w-lg mx-auto mt-16 rounded">
@@ -153,7 +152,7 @@ export default function Navbar({ activePage }) {
                     <h3 className="text-lg font-semibold">{product.name}</h3>
                     <p>Price: {product.price}</p>
                     <button
-                      onClick={() => removeFromCart(product.id)} // Remove item functionality
+                      onClick={() => removeFromCart(product.id)}
                       className="bg-red-500 text-white px-4 py-2 mt-2 rounded"
                     >
                       Remove
@@ -168,7 +167,7 @@ export default function Navbar({ activePage }) {
               </div>
             )}
             <button
-              onClick={() => setShowCart(false)} // Close the cart modal
+              onClick={() => setShowCart(false)}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
             >
               Close
