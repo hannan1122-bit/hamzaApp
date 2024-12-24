@@ -6,12 +6,12 @@ export default {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "media", // Enables media-query-based dark mode
+  darkMode: "media",
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "var(--background, #ffffff)",
+        foreground: "var(--foreground, #171717)",
       },
     },
   },
