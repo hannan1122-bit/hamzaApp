@@ -5,7 +5,7 @@ import { GiMountaintop } from "react-icons/gi";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../contexts/CartContext";
 import { useRouter } from "next/navigation";
-import Cart from "./Cart"; // Import the Cart component
+
 
 export default function Navbar({ activePage }) {
   const [isOpen, setIsOpen] = useState(false);
