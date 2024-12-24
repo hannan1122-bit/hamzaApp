@@ -5,12 +5,14 @@ import { GiMountaintop } from "react-icons/gi";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../contexts/CartContext";
 import { useRouter } from "next/navigation";
+import Cart from "./Cart"; // Import the Cart component
 
 export default function Navbar({ activePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [scrollingDown, setScrollingDown] = useState(false);
-  const { cart } = useCart();
+  const [showCart, setShowCart] = useState(false); // State to toggle cart visibility
+  const { cart, removeFromCart, getTotalPrice } = useCart(); // Destructure removeFromCart and getTotalPrice
   const router = useRouter();
   const [isHomepage, setIsHomepage] = useState(router.pathname === "/");
 
@@ -74,9 +76,9 @@ export default function Navbar({ activePage }) {
             </div>
 
             <div className="hidden md:flex space-x-6 items-center">
-              {["Home", "About", "Products", "Contact"].map((page) => (
+              {["Home", "About", "Products", "Contact"].map((page, i) => (
                 <button
-                  key={page}
+                  key={i}
                   onClick={() => handleScroll(page)}
                   className={`hover:text-gray-300 text-lg font-medium ${
                     activePage === page ? "text-yellow-300" : ""
@@ -86,7 +88,7 @@ export default function Navbar({ activePage }) {
                 </button>
               ))}
               <button
-                onClick={() => handleScroll("Cart")}
+                onClick={() => setShowCart(true)} // Show the cart when clicked
                 className="relative hover:text-gray-300 text-lg font-medium"
               >
                 <FaShoppingCart className="text-2xl" />
@@ -104,7 +106,7 @@ export default function Navbar({ activePage }) {
               </button>
 
               <button
-                onClick={() => handleScroll("Cart")}
+                onClick={() => setShowCart(true)} // Show the cart when clicked
                 className="relative ml-4 text-white"
               >
                 <FaShoppingCart className="text-2xl" />
@@ -121,9 +123,9 @@ export default function Navbar({ activePage }) {
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {["Home", "About", "Products", "Contact"].map((page) => (
+              {["Home", "About", "Products", "Contact"].map((page, i) => (
                 <button
-                  key={page}
+                  key={i}
                   onClick={() => handleScroll(page)}
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
                     activePage === page ? "bg-yellow-700" : ""
@@ -136,6 +138,44 @@ export default function Navbar({ activePage }) {
           </div>
         )}
       </div>
+
+      {/* Show Cart Modal when showCart is true */}
+      {showCart && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-40">
+          <div className="bg-white p-6 max-w-lg mx-auto mt-16 rounded">
+            <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
+            {cart.length === 0 ? (
+              <p>Your cart is empty.</p>
+            ) : (
+              <div>
+                {cart.map((product, i) => (
+                  <div key={i} className="mb-4 border p-4 rounded shadow">
+                    <h3 className="text-lg font-semibold">{product.name}</h3>
+                    <p>Price: {product.price}</p>
+                    <button
+                      onClick={() => removeFromCart(product.id)} // Remove item functionality
+                      className="bg-red-500 text-white px-4 py-2 mt-2 rounded"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <div className="mt-4">
+                  <p className="text-lg font-semibold">
+                    Total: ${getTotalPrice().toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            )}
+            <button
+              onClick={() => setShowCart(false)} // Close the cart modal
+              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

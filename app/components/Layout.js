@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import { useState } from "react";
-import Header from "./Header"; // Ensure the correct path
-import Navbar from "./Navbar"; // Ensure the correct path
-import Footer from "./Footer"; // Ensure the correct path
+import Header from "./Header";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 import { CartProvider } from "../contexts/CartContext"; // Correct the path if needed
 
 const Layout = ({ children, activePage }) => {
@@ -14,7 +14,7 @@ const Layout = ({ children, activePage }) => {
         <Header />
 
         {/* Navbar */}
-        <Navbar setPage={() => {}} activePage={activePage} /> {/* Pass activePage directly */}
+        <Navbar activePage={activePage} setPage={() => {}} /> {/* Corrected navbar props */}
 
         {/* Main Content */}
         <main className="flex-grow bg-gray-100">

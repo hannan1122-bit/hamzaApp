@@ -29,7 +29,7 @@ export default function MainPage() {
       },
       {
         root: null,
-        threshold: 0.5, // Adjust to trigger when 50% of the section is visible
+        threshold: 0.5,
       }
     );
 
@@ -45,8 +45,7 @@ export default function MainPage() {
       <div>
         <Header />
         <Navbar activePage={activePage} setPage={setActivePage} />
-        <main className="pt-[120px]"> {/* Add enough padding to push content below the navbar */}
-          {/* Sections for scrolling */}
+        <main className="pt-[120px]">
           <section data-page="Home">
             <Home />
           </section>
